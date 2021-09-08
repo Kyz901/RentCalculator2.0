@@ -2,6 +2,7 @@ package RentCalculator.service.implementation;
 
 import RentCalculator.model.Product;
 import RentCalculator.repository.ProductRepository;
+import RentCalculator.repository.UserRepository;
 import RentCalculator.service.PricingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class PricingServiceImpl implements PricingService {
 
     private final ProductRepository productRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<Product> getAllProducts() {
