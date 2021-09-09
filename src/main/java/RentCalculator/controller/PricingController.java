@@ -45,7 +45,7 @@ public class PricingController {
 
     @PostMapping("/payment-master/{paymentMasterId}/pricing")
     public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPrice> paymentPrice, @PathVariable Integer paymentMasterId){
-        List<PaymentPrice> paymentPriceList = null;
+        List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrice, paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>( paymentPriceList, HttpStatus.OK);
     }
 
