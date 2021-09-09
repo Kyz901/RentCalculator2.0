@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkValidation(String login, String pass) {
-        List<User> users = userRepository.findAll().stream().filter(u -> u.getLogin().equals(login) & u.getPassword().equals(pass)).collect(Collectors.toList());
+        List<User> users = userRepository.findAll().stream().filter(u -> u.getLogin().equals(login) && u.getPassword().equals(pass)).collect(Collectors.toList());
         if(users.size() > 0){
          CurrentUser.set(users.get(0));
          return true;

@@ -1,5 +1,6 @@
 package RentCalculator.service.implementation;
 
+import RentCalculator.dto.CurrentUser;
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
 import RentCalculator.model.Product;
@@ -41,7 +42,7 @@ public class PricingServiceImpl implements PricingService {
 
     @Override
     public List<PaymentMaster> getAllPaymentMaster() {
-        return paymentMasterRepository.findAll().stream().filter(pm -> !pm.getIsDeleted()).collect(Collectors.toList());
+        return paymentMasterRepository.findAll().stream().filter(pm -> !pm.getIsDeleted() && pm.getUser().getId().equals(CurrentUser.get().getId())).collect(Collectors.toList());
     }
 
     @Override
