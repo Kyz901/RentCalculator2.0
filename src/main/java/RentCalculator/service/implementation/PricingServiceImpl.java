@@ -47,6 +47,7 @@ public class PricingServiceImpl implements PricingService {
 
     @Override
     public void createPaymentMaster(PaymentMaster paymentMaster) {
+        paymentMaster.setUser(CurrentUser.get());
         paymentMasterRepository.save(paymentMaster);
     }
 
