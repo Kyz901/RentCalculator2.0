@@ -15,7 +15,7 @@ public class TicketPanel implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_price_id", nullable = false)
-    private PaymentPrice paymentPriceId;
+    private PaymentPrice paymentPrice;
 
     public Integer getId() {
         return id;
@@ -25,11 +25,11 @@ public class TicketPanel implements Serializable {
         this.id = id;
     }
 
-    public PaymentPrice getPaymentPriceId() {
-        return paymentPriceId;
+    public PaymentPrice getPaymentPrice() {
+        return paymentPrice;
     }
 
-    public void setPaymentPriceId(PaymentPrice paymentPriceId) {
-        this.paymentPriceId = paymentPriceId;
+    public void setPaymentPrice(PaymentPrice paymentPrice) {
+        this.paymentPrice = paymentPrice;
     }
 }

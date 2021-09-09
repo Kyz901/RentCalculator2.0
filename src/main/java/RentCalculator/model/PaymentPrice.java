@@ -14,7 +14,7 @@ public class PaymentPrice implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="payment_master_id", nullable = false)
-    private PaymentMaster paymentMasterId;
+    private PaymentMaster paymentMaster;
 
     @Column(name="old_meter_readings")
     private Integer oldMeterReadings;
@@ -24,7 +24,7 @@ public class PaymentPrice implements Serializable {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
-    private Product productId;
+    private Product product;
 
     @Column
     private Double price;
@@ -40,12 +40,12 @@ public class PaymentPrice implements Serializable {
         this.id = id;
     }
 
-    public PaymentMaster getPaymentMasterId() {
-        return paymentMasterId;
+    public PaymentMaster getPaymentMaster() {
+        return paymentMaster;
     }
 
-    public void setPaymentMasterId(PaymentMaster paymentMasterId) {
-        this.paymentMasterId = paymentMasterId;
+    public void setPaymentMaster(PaymentMaster paymentMaster) {
+        this.paymentMaster = paymentMaster;
     }
 
     public Integer getOldMeterReadings() {
@@ -64,12 +64,12 @@ public class PaymentPrice implements Serializable {
         this.newMeterReadings = newMeterReadings;
     }
 
-    public Product getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductId(Product productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Double getPrice() {
