@@ -26,7 +26,7 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("REST API HYBRIS TEST TASK")
+        return new ApiInfoBuilder().title("REST API DIPLOMA PROJECT")
                 .description("RESTful").version("0.0.1").build();
     }
 
