@@ -19,7 +19,7 @@ public class Product implements Serializable {
     private Double singlePrice;
 
     @Column(name="is_deleted")
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     public Integer getId() {
         return id;
@@ -45,11 +45,11 @@ public class Product implements Serializable {
         this.singlePrice = singlePrice;
     }
 
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 }

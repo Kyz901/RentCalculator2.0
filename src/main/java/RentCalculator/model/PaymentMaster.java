@@ -13,7 +13,7 @@ public class PaymentMaster implements Serializable {
     private Integer id;
 
     @Column(name="total_price")
-    private Double totalPrice;
+    private double totalPrice;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -33,7 +33,7 @@ public class PaymentMaster implements Serializable {
         this.id = id;
     }
 
-    public Double getTotalPrice() {
+    public double getTotalPrice() {
         return totalPrice;
     }
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User implements Serializable {
 
     @Id
@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String password;
 
     @Column(name="is_deleted")
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     public Integer getId() {
         return id;
@@ -78,11 +78,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 }

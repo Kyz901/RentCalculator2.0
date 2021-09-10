@@ -1,6 +1,8 @@
 package RentCalculator.controller;
 
 import RentCalculator.dto.CurrentUser;
+import RentCalculator.dto.ProductDTO;
+import RentCalculator.dto.UserDTO;
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.Product;
 import RentCalculator.model.User;
@@ -30,15 +32,21 @@ public class UserConroller {
         return userService.isUserExist(login);
     }
 
+    @GetMapping("/check-validation")
+    public boolean validateUser(@RequestParam String login,
+                                @RequestParam String pass) {
+        return userService.checkValidation(login, pass);
+    }
+
     @PostMapping("/create-user")
     public ResponseEntity<?> createUser(@RequestParam String login,
-                                     @RequestParam String pass) { //todo: DTO
+                                        @RequestParam String pass) {
         if(!userService.isUserExist(login)){
             userService.createUser(login,pass);
             userService.checkValidation(login,pass);
             return new ResponseEntity<User>(CurrentUser.get(), HttpStatus.OK);
         }
-        return ResponseEntity.status(409).body("User already exist");
+        return ResponseEntity.status(409).body("User already exist!");
     }
 
     @PutMapping("/create-user/update-info")
@@ -51,7 +59,8 @@ public class UserConroller {
 
     @PutMapping("/delete-user/{userId}")
     public ResponseEntity<?> deleteUser(@RequestParam Integer userId) {
-        User user = userService.deleteUser(userId);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        UserDTO user = mapperFactory.getMapperFacade().map(userService.deleteUser(userId), UserDTO.class);
+        return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
     }
 }

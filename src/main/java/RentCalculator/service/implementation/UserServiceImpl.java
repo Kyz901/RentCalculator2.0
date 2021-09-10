@@ -23,7 +23,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll().stream().filter(u -> !u.getDeleted()).collect(Collectors.toList());
+        return userRepository.findAll().stream()
+                .filter(u -> !u.isDeleted())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
     public void createUser(String login, String pass) {
             User user = new User();
             user.setLogin(login);
-            user.setPassword(login);
+            user.setPassword(pass);
             userRepository.save(user);
     }
 
@@ -49,7 +51,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkValidation(String login, String pass) {
-        List<User> users = userRepository.findAll().stream().filter(u -> u.getLogin().equals(login) && u.getPassword().equals(pass)).collect(Collectors.toList());
+        List<User> users = userRepository.findAll().stream()
+                .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase())
+                        && u.getPassword().equals(pass)
+                        && !u.isDeleted())
+                .collect(Collectors.toList());
         if(users.size() > 0){
          CurrentUser.set(users.get(0));
          return true;
@@ -59,7 +65,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExist(String login) {
-        List<User> users = userRepository.findAll().stream().filter(u -> u.getLogin().equals(login)).collect(Collectors.toList());
+        List<User> users = userRepository.findAll().stream()
+                .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase())
+                        && !u.isDeleted())
+                .collect(Collectors.toList());
         return users.size() > 0;
     }
 

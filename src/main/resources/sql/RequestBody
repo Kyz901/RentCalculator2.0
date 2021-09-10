@@ -1,0 +1,70 @@
+    --  PRICING CONTROLLER  --
+
+GET: "/product"
+--||--
+
+GET: "/product/{productId}"
+ - Integer productId
+
+GET: "/payment-master/{paymentMasterId}"
+ - Integer paymentMasterId
+
+GET: "/payment-master/{paymentMasterId}/pricing"
+ - Integer paymentMasterId
+
+POST: "/payment-master/{paymentMasterId}/pricing"
+[
+  {
+    "newMeterReadings": 6,
+    "oldMeterReadings": 2,
+    "paymentMaster": {
+      "user": {
+      }
+    },
+    "price": 0,
+    "product": {
+      "id": 1
+    }
+  },
+  {
+    "newMeterReadings": 1453,
+    "oldMeterReadings": 1434,
+    "paymentMaster": {
+      "user": {
+      }
+    },
+    "price": 0,
+    "product": {
+      "id": 2
+    }
+  }
+]
+
+POST: "/payment-master"
+{
+  "id": 0,
+  "paymentName": "NewMaster1",
+  "user": {
+  }
+}
+
+    --  USER CONTROLLER --
+
+GET: "/check-user-exist"
+  - String login
+
+GET: "/check-validation"
+  - String login
+  - String pass
+
+POST: "/create-user"
+  - String login
+  - String pass
+
+PUT: "/create-user/update-info"
+  - String email
+  - String firstName
+  - String secondName
+
+PUT: "/delete-user/{userId}"
+  - Integer userId

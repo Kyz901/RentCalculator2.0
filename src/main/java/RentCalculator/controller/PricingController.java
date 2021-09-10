@@ -1,5 +1,8 @@
 package RentCalculator.controller;
 
+import RentCalculator.dto.PaymentMasterDTO;
+import RentCalculator.dto.PaymentPriceDTO;
+import RentCalculator.dto.ProductDTO;
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
 import RentCalculator.model.Product;
@@ -24,21 +27,35 @@ public class PricingController {
     private final PricingService pricingService;
 
     @GetMapping("/product")
-    public List<Product> getAllProducts() {
-        return pricingService.getAllProducts();
+    public ResponseEntity<?> getAllProducts() {
+        List<Product> productList = pricingService.getAllProducts();
+
+        return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
     }
 
     @GetMapping("/product/{productId}")
-    public Product getAllProducts(@PathVariable Integer productId) {
-        return pricingService.getProductById(productId);
+    public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        ProductDTO product = mapperFactory.getMapperFacade().map(pricingService.getProductById(productId),ProductDTO.class);
+
+        return new ResponseEntity<ProductDTO>(product, HttpStatus.OK);
     }
 
     @GetMapping("/payment-master/{paymentMasterId}")
-    public PaymentMaster getPaymentMasterById(@PathVariable Integer paymentMasterId) {
-        return pricingService.getPaymentMasterById(paymentMasterId);
+    public ResponseEntity<?> getPaymentMasterById(@PathVariable Integer paymentMasterId) {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        PaymentMasterDTO paymentMaster = mapperFactory.getMapperFacade().map(pricingService.getPaymentMasterById(paymentMasterId),PaymentMasterDTO.class);
+
+        return new ResponseEntity<PaymentMasterDTO>(paymentMaster, HttpStatus.OK);
+    }
+
+    @GetMapping("/payment-master/{paymentMasterId}/pricing")
+    public ResponseEntity<?> getPaymentPrices(@PathVariable Integer paymentMasterId) {
+        List<PaymentPrice> paymentPriceList = pricingService.getPaymentPrices(paymentMasterId);
+        return new ResponseEntity<List<PaymentPrice>>(paymentPriceList, HttpStatus.OK);
     }
     @PostMapping("/payment-master")
-    public void createPaymentMaster(@RequestBody PaymentMaster paymentMaster) { //todo: DTO
+    public void createPaymentMaster(@RequestBody PaymentMasterDTO paymentMaster) {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         pricingService.createPaymentMaster(mapperFactory.getMapperFacade().map(paymentMaster, PaymentMaster.class));
     }
@@ -46,6 +63,7 @@ public class PricingController {
     @PostMapping("/payment-master/{paymentMasterId}/pricing")
     public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPrice> paymentPrice, @PathVariable Integer paymentMasterId){
         List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrice, paymentMasterId);
+        pricingService.updateTotalPriceInPaymentMaster(paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>( paymentPriceList, HttpStatus.OK);
     }
 

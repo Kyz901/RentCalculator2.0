@@ -30,7 +30,7 @@ public class PaymentPrice implements Serializable {
     private Double price;
 
     @Column(name="is_deleted")
-    private Boolean isDeleted;
+    private boolean isDeleted;
 
     public Integer getId() {
         return id;
@@ -80,11 +80,11 @@ public class PaymentPrice implements Serializable {
         this.price = price;
     }
 
-    public Boolean getDeleted() {
+    public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(Boolean deleted) {
+    public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
 }
