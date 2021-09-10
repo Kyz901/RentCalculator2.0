@@ -2,7 +2,7 @@ create table product_service
 ( id int unsigned auto_increment primary key,
   product_name varchar (255) charset utf8,
   single_price decimal(12,2) default 0.00 null,
-  is_deleted tinyint(1) default 0 not null
+  is_deleted tinyint(1) default 0 null
 );
 
 create table users
@@ -12,7 +12,7 @@ create table users
   email varchar(255) charset utf8,
   login varchar(255) charset utf8,
   password varchar(255) charset utf8,
-  is_deleted tinyint(1) default 0 not null
+  is_deleted tinyint(1) default 0 null
 );
 
 create table payment_master
@@ -21,7 +21,7 @@ create table payment_master
   user_id int(11) unsigned null,
   payment_name varchar(255) charset utf8,
   createdate datetime default CURRENT_TIMESTAMP not null,
-  is_deleted tinyint(1) default 0 not null,
+  is_deleted tinyint(1) default 0 null,
   constraint fk_pm_users
     foreign key (user_id) references rentcalculator.users (id)
 );
@@ -37,7 +37,7 @@ create table payment_price
   product_id int(11) unsigned null,
   price decimal(12,2) default 0.00 null,
   createdate datetime default CURRENT_TIMESTAMP not null,
-  is_deleted tinyint(1) default 0 not null,
+  is_deleted tinyint(1) default 0 null,
   constraint fk_pp_paymentmaster
     foreign key (payment_master_id) references rentcalculator.payment_master (id),
   constraint fk_pp_productservice
