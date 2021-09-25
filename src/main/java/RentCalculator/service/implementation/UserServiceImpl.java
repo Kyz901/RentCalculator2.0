@@ -28,31 +28,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer userId) {
-        return userRepository.getOne(userId);
+        return userRepository.getUserById(userId);
     }
 
     @Override
     public void createUser(String login, String pass) {
-            User user = new User();
-            user.setLogin(login);
-            user.setPassword(pass);
+            User user = new User()
+            .setLogin(login)
+            .setPassword(pass);
             userRepository.save(user);
     }
 
     @Override
-    public User deleteUser(Integer userId) {
-        User user = userRepository.getOne(userId);
-        user.setDeleted(true);
-        userRepository.save(user);
-        return user;
+    public void deleteUser(Integer userId) {
+        userRepository.deleteUser(userId);
     }
 
     @Override
     public boolean checkValidation(String login, String pass) {
-        List<User> users = userRepository.findAll().stream()
+        List<User> users = userRepository.findAllUsers().stream()
                 .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase())
-                        && u.getPassword().equals(pass)
-                        && !u.isDeleted())
+                        && u.getPassword().equals(pass))
                 .collect(Collectors.toList());
         if(users.size() > 0){
          CurrentUser.set(users.get(0));
@@ -63,19 +59,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExist(String login) {
-        List<User> users = userRepository.findAll().stream()
-                .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase())
-                        && !u.isDeleted())
+        List<User> users = userRepository.findAllUsers().stream()
+                .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase()))
                 .collect(Collectors.toList());
         return users.size() > 0;
     }
 
     @Override
     public void updateUserInfo(String firstName, String secondName, String email) {
-        User user = CurrentUser.get();
-        user.setFirstName(firstName);
-        user.setSecondName(secondName);
-        user.setEmail(email);
+        User user = CurrentUser.get().setFirstName(firstName).setSecondName(secondName).setEmail(email);
         CurrentUser.set(user);
         userRepository.save(user);
     }

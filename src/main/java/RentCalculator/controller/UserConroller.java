@@ -65,8 +65,7 @@ public class UserConroller {
 
     @PutMapping("/delete-user/{userId}")
     public ResponseEntity<?> deleteUser(@RequestParam Integer userId) {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        UserDTO user = mapperFactory.getMapperFacade().map(userService.deleteUser(userId), UserDTO.class);
-        return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
+        userService.deleteUser(userId);
+        return ResponseEntity.status(200).body("User successfully deleted");
     }
 }

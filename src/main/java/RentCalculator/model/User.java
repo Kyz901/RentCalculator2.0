@@ -34,55 +34,62 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
+    public User setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(String firstName) {
+    public User setFirstName(String firstName) {
         this.firstName = firstName;
+        return this;
     }
 
     public String getSecondName() {
         return secondName;
     }
 
-    public void setSecondName(String secondName) {
+    public User setSecondName(String secondName) {
         this.secondName = secondName;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getLogin() {
         return login;
     }
 
-    public void setLogin(String login) {
+    public User setLogin(String login) {
         this.login = login;
+        return this;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public User setPassword(String password) {
         this.password = password;
+        return this;
     }
 
     public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public User setDeleted(boolean deleted) {
         isDeleted = deleted;
+        return this;
     }
 }
