@@ -27,6 +27,12 @@ public class UserConroller {
 
     private final UserService userService;
 
+    @GetMapping("/all-users")
+    public ResponseEntity<?> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<List<User>>( users, HttpStatus.OK);
+    }
+
     @GetMapping("/check-user-exist")
     public boolean isUserExist(@RequestParam String login) {
         return userService.isUserExist(login);
