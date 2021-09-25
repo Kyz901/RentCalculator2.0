@@ -25,31 +25,35 @@ public class Product implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
+    public Product setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public String getProductName() {
         return productName;
     }
 
-    public void setProductName(String productName) {
+    public Product setProductName(String productName) {
         this.productName = productName;
+        return this;
     }
 
     public Double getSinglePrice() {
         return singlePrice;
     }
 
-    public void setSinglePrice(Double singlePrice) {
+    public Product setSinglePrice(Double singlePrice) {
         this.singlePrice = singlePrice;
+        return this;
     }
 
     public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public Product setDeleted(boolean deleted) {
         isDeleted = deleted;
+        return this;
     }
 }

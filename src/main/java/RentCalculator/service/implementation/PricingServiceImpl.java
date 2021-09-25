@@ -1,6 +1,8 @@
 package RentCalculator.service.implementation;
 
 import RentCalculator.dto.CurrentUser;
+import RentCalculator.dto.PaymentMasterDTO;
+import RentCalculator.dto.PaymentPriceDTO;
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
 import RentCalculator.model.Product;
@@ -9,6 +11,7 @@ import RentCalculator.repository.PaymentPriceRepository;
 import RentCalculator.repository.ProductRepository;
 import RentCalculator.repository.UserRepository;
 import RentCalculator.service.PricingService;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,61 +30,62 @@ public class PricingServiceImpl implements PricingService {
 
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAll().stream()
-                .filter(p -> !p.isDeleted())
-                .collect(Collectors.toList());
+        return productRepository.findAllProducts();
     }
 
     @Override
     public Product getProductById(Integer productId) {
-        return productRepository.getOne(productId);
+        return productRepository.findProductById(productId);
     }
 
     @Override
     public PaymentMaster getPaymentMasterById(Integer paymentMasterId) {
-       return paymentMasterRepository.getOne(paymentMasterId);
+       return paymentMasterRepository.findPaymentMasterById(paymentMasterId);
     }
 
     @Override
-    public List<PaymentMaster> getAllPaymentMaster() {
-        return paymentMasterRepository.findAll().stream()
-                .filter(pm -> !pm.getIsDeleted()
-                        && pm.getUser().getId().equals(CurrentUser.get().getId()))
-                .collect(Collectors.toList());
+    public List<PaymentMaster> getAllPaymentMasterForCurrentUser() {
+        return paymentMasterRepository.findPaymentMasterForCurrentUser(CurrentUser.get().getId());
     }
 
     @Override
-    public void createPaymentMaster(PaymentMaster paymentMaster) {
-        paymentMaster.setUser(CurrentUser.get());
-        paymentMasterRepository.save(paymentMaster);
+    public PaymentMaster createPaymentMaster(String paymentName) {
+        paymentMasterRepository.createPaymentMaster(CurrentUser.get().getId(), paymentName);
+        return paymentMasterRepository.findPaymentMasterByName(paymentName);
     }
 
+    /** Pricing by formula -> price = (newMeterReadings - oldMeterReadings) * product.singlePrice(m^3)
+     *
+     * @param paymentPriceList
+     * @param paymentMasterId
+     * @return List of PaymentPrices
+     */
     @Override
-    public List<PaymentPrice> priceProduct(List<PaymentPrice> paymentPriceList, Integer paymentMasterId) {
-        for (PaymentPrice paymentPrice : paymentPriceList) {
-            Product product = productRepository.getOne(paymentPrice.getProduct().getId());
-            paymentPrice.setPrice(
-                (paymentPrice.getNewMeterReadings() - paymentPrice.getOldMeterReadings()) * product.getSinglePrice() // (new - old) * price for 1m^3
+    public List<PaymentPrice> priceProduct(List<PaymentPriceDTO> paymentPriceList, Integer paymentMasterId) {
+        for (PaymentPriceDTO paymentPrice : paymentPriceList) {
+            Product product = productRepository.findProductById(paymentPrice.getProductId());
+            Integer newMeterReadings = paymentPrice.getNewMeterReadings();
+            Integer oldMeterReadings = paymentPrice.getOldMeterReadings();
+            double price = (newMeterReadings - oldMeterReadings) * product.getSinglePrice();
+            paymentPriceRepository.insertPriceIntoPaymentPrice(
+                    paymentMasterId,
+                    oldMeterReadings,
+                    newMeterReadings,
+                    paymentPrice.getProductId(),
+                    price
             );
-            paymentPrice.setPaymentMaster(paymentMasterRepository.getOne(paymentMasterId));
-            paymentPrice.setProduct(product);
-            paymentPriceRepository.save(paymentPrice);
         }
-        return paymentPriceList;
+        return paymentPriceRepository.findAllPricesByPaymentMasterId(paymentMasterId);
     }
 
     @Override
     public void updateTotalPriceInPaymentMaster(Integer paymentMasterId) {
         Double totalPrice = 0.00;
-        List<PaymentPrice> paymentPriceList = paymentPriceRepository.findAll().stream()
-                .filter(pp -> !pp.isDeleted())
-                .collect(Collectors.toList());
+        List<PaymentPrice> paymentPriceList = paymentPriceRepository.findAllPricesByPaymentMasterId(paymentMasterId);
         for (PaymentPrice paymentPrice : paymentPriceList) {
             totalPrice += paymentPrice.getPrice();
         }
-        PaymentMaster paymentMaster = paymentMasterRepository.getOne(paymentMasterId);
-        paymentMaster.setTotalPrice(totalPrice);
-        paymentMasterRepository.save(paymentMaster);
+        paymentMasterRepository.updateTotalPrice(paymentMasterId, totalPrice);
     }
 
     @Override

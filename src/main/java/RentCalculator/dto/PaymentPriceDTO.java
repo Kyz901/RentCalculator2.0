@@ -12,10 +12,10 @@ import lombok.ToString;
 public class PaymentPriceDTO {
 
     private Integer id;
-    private PaymentMaster paymentMaster;
+    private Integer paymentMasterId;
     private Integer oldMeterReadings;
     private Integer newMeterReadings;
-    private Product product;
+    private Integer productId;
     private Double price;
     private boolean isDeleted;
 }
