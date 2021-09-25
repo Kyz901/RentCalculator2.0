@@ -2,6 +2,7 @@ package RentCalculator.repository;
 
 import RentCalculator.model.PaymentPrice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,9 @@ public interface PaymentPriceRepository extends JpaRepository<PaymentPrice,Integ
     List<PaymentPrice> findAllPricesByPaymentMasterId(@Param("paymentMasterId") Integer paymentMasterId);
 
     @Transactional
-    @Query(value = "INSERT INTO rentcalculator.payment_price VALUES ( NULL, :paymentMasterId, :oldMeterReadings, :newMeterReadings, :productId, :price, 0)",
+    @Modifying
+    @Query(value = "INSERT INTO rentcalculator.payment_price (id, payment_master_id, old_meter_readings, new_meter_readings, product_id, price, is_deleted) " +
+                   "VALUES ( NULL, :paymentMasterId, :oldMeterReadings, :newMeterReadings, :productId, :price, 0)",
             nativeQuery = true)
     void insertPriceIntoPaymentPrice(@Param("paymentMasterId") Integer paymentMasterId,
                                      @Param("oldMeterReadings") double oldMeterReadings,

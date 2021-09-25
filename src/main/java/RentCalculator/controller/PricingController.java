@@ -47,6 +47,12 @@ public class PricingController {
         return new ResponseEntity<PaymentMaster>(paymentMaster, HttpStatus.OK);
     }
 
+    @GetMapping("/payment-master")
+    public ResponseEntity<?> getPaymentsMasterForCurrentUser() {
+        List<PaymentMaster> paymentMasterList = pricingService.getAllPaymentMasterForCurrentUser();
+        return new ResponseEntity<List<PaymentMaster>>(paymentMasterList, HttpStatus.OK);
+    }
+
     @GetMapping("/payment-master/{paymentMasterId}/pricing")
     public ResponseEntity<?> getPaymentPrices(@PathVariable Integer paymentMasterId) {
         List<PaymentPrice> paymentPriceList = pricingService.getPaymentPrices(paymentMasterId);

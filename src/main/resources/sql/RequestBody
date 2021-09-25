@@ -17,36 +17,18 @@ POST: "/payment-master/{paymentMasterId}/pricing"
   {
     "newMeterReadings": 6,
     "oldMeterReadings": 2,
-    "paymentMaster": {
-      "user": {
-      }
-    },
-    "price": 0,
-    "product": {
-      "id": 1
-    }
+    "productId": 1
   },
   {
-    "newMeterReadings": 1453,
-    "oldMeterReadings": 1434,
-    "paymentMaster": {
-      "user": {
-      }
-    },
-    "price": 0,
-    "product": {
-      "id": 2
-    }
+     "newMeterReadings": 6,
+     "oldMeterReadings": 2,
+     "productId": 2
   }
 ]
+ - Integer paymentMasterId
 
 POST: "/payment-master"
-{
-  "id": 0,
-  "paymentName": "NewMaster1",
-  "user": {
-  }
-}
+ - String paymentName
 
     --  USER CONTROLLER --
 
