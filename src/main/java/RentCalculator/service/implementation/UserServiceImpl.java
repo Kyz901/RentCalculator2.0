@@ -23,9 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAll().stream()
-                .filter(u -> !u.isDeleted())
-                .collect(Collectors.toList());
+        return userRepository.findAllUsers();
     }
 
     @Override
