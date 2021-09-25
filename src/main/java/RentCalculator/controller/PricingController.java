@@ -35,18 +35,16 @@ public class PricingController {
 
     @GetMapping("/product/{productId}")
     public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        ProductDTO product = mapperFactory.getMapperFacade().map(pricingService.getProductById(productId),ProductDTO.class);
+        Product product = pricingService.getProductById(productId);
 
-        return new ResponseEntity<ProductDTO>(product, HttpStatus.OK);
+        return new ResponseEntity<Product>(product, HttpStatus.OK);
     }
 
     @GetMapping("/payment-master/{paymentMasterId}")
     public ResponseEntity<?> getPaymentMasterById(@PathVariable Integer paymentMasterId) {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        PaymentMasterDTO paymentMaster = mapperFactory.getMapperFacade().map(pricingService.getPaymentMasterById(paymentMasterId),PaymentMasterDTO.class);
+        PaymentMaster paymentMaster = pricingService.getPaymentMasterById(paymentMasterId);
 
-        return new ResponseEntity<PaymentMasterDTO>(paymentMaster, HttpStatus.OK);
+        return new ResponseEntity<PaymentMaster>(paymentMaster, HttpStatus.OK);
     }
 
     @GetMapping("/payment-master/{paymentMasterId}/pricing")
@@ -55,13 +53,13 @@ public class PricingController {
         return new ResponseEntity<List<PaymentPrice>>(paymentPriceList, HttpStatus.OK);
     }
     @PostMapping("/payment-master")
-    public void createPaymentMaster(@RequestBody PaymentMasterDTO paymentMaster) {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        pricingService.createPaymentMaster(mapperFactory.getMapperFacade().map(paymentMaster, PaymentMaster.class));
+    public ResponseEntity<?> createPaymentMaster(@RequestParam String paymentName) {
+        PaymentMaster paymentMaster = pricingService.createPaymentMaster(paymentName);
+        return new ResponseEntity<PaymentMaster>(paymentMaster, HttpStatus.OK);
     }
 
     @PostMapping("/payment-master/{paymentMasterId}/pricing")
-    public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPrice> paymentPrice, @PathVariable Integer paymentMasterId){
+    public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPriceDTO> paymentPrice, @PathVariable Integer paymentMasterId){
         List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrice, paymentMasterId);
         pricingService.updateTotalPriceInPaymentMaster(paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>( paymentPriceList, HttpStatus.OK);
