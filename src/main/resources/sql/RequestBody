@@ -27,23 +27,23 @@ POST: "/payment-master/{paymentMasterId}/pricing"
 ]
  - Integer paymentMasterId
 
-POST: "/payment-master"
+POST: "/payment-master?paymentName=:paymentName"
  - String paymentName
 
     --  USER CONTROLLER --
 
-GET: "/check-user-exist"
+GET: "/check-user-exist?login=:login"
   - String login
 
-GET: "/check-validation"
-  - String login
-  - String pass
-
-POST: "/create-user"
+GET: "/check-validation?login=:login&pass=:pass"
   - String login
   - String pass
 
-PUT: "/create-user/update-info"
+POST: "/create-user?login=:login&pass=:pass"
+  - String login
+  - String pass
+
+PUT: "/create-user/update-info?email=:email&firstName=:firstName&secondName=:secondName"
   - String email
   - String firstName
   - String secondName

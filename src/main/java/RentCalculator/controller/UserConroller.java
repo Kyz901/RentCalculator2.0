@@ -60,8 +60,8 @@ public class UserConroller {
         return new ResponseEntity<User>(CurrentUser.get(),HttpStatus.OK);
     }
 
-    @PutMapping("/delete-user/{userId}")
-    public ResponseEntity<?> deleteUser(@RequestParam Integer userId) {
+    @DeleteMapping("/delete-user/{userId}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
         return ResponseEntity.status(200).body("User successfully deleted");
     }
