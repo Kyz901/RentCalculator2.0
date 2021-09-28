@@ -1,25 +1,25 @@
 package RentCalculator.service.implementation;
 
-import RentCalculator.dto.CurrentUser;
+import RentCalculator.model.CurrentUser;
 import RentCalculator.model.User;
-import RentCalculator.repository.PaymentMasterRepository;
-import RentCalculator.repository.ProductRepository;
+
 import RentCalculator.repository.UserRepository;
+
 import RentCalculator.service.UserService;
-import lombok.RequiredArgsConstructor;
-import ma.glasnost.orika.MapperFactory;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final PaymentMasterRepository paymentMasterRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> getAllUsers() {

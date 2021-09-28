@@ -1,31 +1,28 @@
 package RentCalculator.controller;
 
-import RentCalculator.dto.CurrentUser;
-import RentCalculator.dto.ProductDTO;
-import RentCalculator.dto.UserDTO;
-import RentCalculator.model.PaymentMaster;
-import RentCalculator.model.Product;
+import RentCalculator.model.CurrentUser;
 import RentCalculator.model.User;
+
 import RentCalculator.service.UserService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.http.HTTPException;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/user")
-@RequiredArgsConstructor
 public class UserConroller {
 
     private final UserService userService;
+
+    public UserConroller(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/all-users")
     public ResponseEntity<?> getAllUsers() {

@@ -1,8 +1,8 @@
 package RentCalculator.model;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Table(name = "ticket_panel")
