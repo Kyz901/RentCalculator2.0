@@ -1,32 +1,35 @@
 package RentCalculator.service.implementation;
 
-import RentCalculator.dto.CurrentUser;
-import RentCalculator.dto.PaymentMasterDTO;
-import RentCalculator.dto.PaymentPriceDTO;
+import RentCalculator.model.CurrentUser;
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
 import RentCalculator.model.Product;
+
+import RentCalculator.dto.PaymentPriceDTO;
+
 import RentCalculator.repository.PaymentMasterRepository;
 import RentCalculator.repository.PaymentPriceRepository;
 import RentCalculator.repository.ProductRepository;
-import RentCalculator.repository.UserRepository;
+
 import RentCalculator.service.PricingService;
-import io.swagger.models.auth.In;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class PricingServiceImpl implements PricingService {
 
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
     private final PaymentMasterRepository paymentMasterRepository;
     private final PaymentPriceRepository paymentPriceRepository;
+
+    public PricingServiceImpl(ProductRepository productRepository, PaymentMasterRepository paymentMasterRepository, PaymentPriceRepository paymentPriceRepository) {
+        this.productRepository = productRepository;
+        this.paymentMasterRepository = paymentMasterRepository;
+        this.paymentPriceRepository = paymentPriceRepository;
+    }
 
     @Override
     public List<Product> getAllProducts() {

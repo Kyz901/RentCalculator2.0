@@ -1,30 +1,30 @@
 package RentCalculator.controller;
 
-import RentCalculator.dto.PaymentMasterDTO;
 import RentCalculator.dto.PaymentPriceDTO;
-import RentCalculator.dto.ProductDTO;
+
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
 import RentCalculator.model.Product;
+
 import RentCalculator.service.PricingService;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.Inet4Address;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequestMapping("/api/v1")
-@RequiredArgsConstructor
 public class PricingController {
 
     private final PricingService pricingService;
+
+    public PricingController(PricingService pricingService) {
+        this.pricingService = pricingService;
+    }
 
     @GetMapping("/product")
     public ResponseEntity<?> getAllProducts() {
