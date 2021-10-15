@@ -19,14 +19,14 @@ public interface PaymentMasterRepository extends JpaRepository<PaymentMaster,Int
                    "WHERE pm.is_deleted = FALSE " +
                    "AND pm.user_id = :userId ",
             nativeQuery = true)
-    List<PaymentMaster> findPaymentMasterForCurrentUser(@Param("userId") Integer userId);
+    List<PaymentMaster> fetchPaymentMasterForCurrentUser(@Param("userId") Integer userId);
 
     @Query(value = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted " +
                    "FROM rentcalculator.payment_master pm " +
                    "WHERE pm.is_deleted = FALSE " +
                    "AND pm.payment_name = :paymentName ",
             nativeQuery = true)
-    PaymentMaster findPaymentMasterByName(@Param("paymentName") String paymentName);
+    PaymentMaster fetchPaymentMasterByName(@Param("paymentName") String paymentName);
 
     @Query(value = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted " +
                    "FROM rentcalculator.payment_master pm " +
@@ -34,7 +34,7 @@ public interface PaymentMasterRepository extends JpaRepository<PaymentMaster,Int
                    "AND pm.id = :paymentMasterId " +
                    "LIMIT 1",
             nativeQuery = true)
-    PaymentMaster findPaymentMasterById(@Param("paymentMasterId") Integer paymentMasterId);
+    PaymentMaster fetchPaymentMasterById(@Param("paymentMasterId") Integer paymentMasterId);
 
     @Transactional
     @Modifying
