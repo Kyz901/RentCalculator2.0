@@ -1,6 +1,7 @@
 package RentCalculator.model;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 @Entity
@@ -36,55 +37,62 @@ public class PaymentPrice implements Serializable {
         return id;
     }
 
-    public void setId(Integer id) {
+    public PaymentPrice setId(Integer id) {
         this.id = id;
+        return this;
     }
 
     public PaymentMaster getPaymentMaster() {
         return paymentMaster;
     }
 
-    public void setPaymentMaster(PaymentMaster paymentMaster) {
+    public PaymentPrice setPaymentMaster(PaymentMaster paymentMaster) {
         this.paymentMaster = paymentMaster;
+        return this;
     }
 
     public Integer getOldMeterReadings() {
         return oldMeterReadings;
     }
 
-    public void setOldMeterReadings(Integer oldMeterReadings) {
+    public PaymentPrice setOldMeterReadings(Integer oldMeterReadings) {
         this.oldMeterReadings = oldMeterReadings;
+        return this;
     }
 
     public Integer getNewMeterReadings() {
         return newMeterReadings;
     }
 
-    public void setNewMeterReadings(Integer newMeterReadings) {
+    public PaymentPrice setNewMeterReadings(Integer newMeterReadings) {
         this.newMeterReadings = newMeterReadings;
+        return this;
     }
 
     public Product getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public PaymentPrice setProduct(Product product) {
         this.product = product;
+        return this;
     }
 
     public Double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public PaymentPrice setPrice(Double price) {
         this.price = price;
+        return this;
     }
 
     public boolean isDeleted() {
         return isDeleted;
     }
 
-    public void setDeleted(boolean deleted) {
+    public PaymentPrice setDeleted(boolean deleted) {
         isDeleted = deleted;
+        return this;
     }
 }

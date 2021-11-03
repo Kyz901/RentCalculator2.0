@@ -1,6 +1,4 @@
-package RentCalculator.dto;
-
-import RentCalculator.model.User;
+package RentCalculator.model;
 
 public final class CurrentUser {
 

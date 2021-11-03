@@ -1,10 +1,6 @@
     --  PRICING CONTROLLER  --
 
-GET: "/product"
---||--
-
-GET: "/product/{productId}"
- - Integer productId
+GET: "/payment-master" //for current user
 
 GET: "/payment-master/{paymentMasterId}"
  - Integer paymentMasterId
@@ -17,51 +13,52 @@ POST: "/payment-master/{paymentMasterId}/pricing"
   {
     "newMeterReadings": 6,
     "oldMeterReadings": 2,
-    "paymentMaster": {
-      "user": {
-      }
-    },
-    "price": 0,
-    "product": {
-      "id": 1
-    }
+    "productId": 1
   },
   {
-    "newMeterReadings": 1453,
-    "oldMeterReadings": 1434,
-    "paymentMaster": {
-      "user": {
-      }
-    },
-    "price": 0,
-    "product": {
-      "id": 2
-    }
+     "newMeterReadings": 6,
+     "oldMeterReadings": 2,
+     "productId": 2
   }
 ]
+ - Integer paymentMasterId
 
-POST: "/payment-master"
+POST: "/payment-master?paymentName=:paymentName"
+ - String paymentName
+
+    --  PRODUCT CONTROLLER --
+
+GET: "/product/all"
+
+GET: "/{productId}"
+ - Integer productId
+
+PUT: "/product/update-price"
 {
-  "id": 0,
-  "paymentName": "NewMaster1",
-  "user": {
-  }
+  "productName": "Water",
+  "singlePrice": 16.32
+}
+
+POST: "/product/create"
+{
+  "productName": "Gas",
+  "singlePrice": 7.23
 }
 
     --  USER CONTROLLER --
 
-GET: "/check-user-exist"
+GET: "/check-user-exist?login=:login"
   - String login
 
-GET: "/check-validation"
-  - String login
-  - String pass
-
-POST: "/create-user"
+GET: "/check-validation?login=:login&pass=:pass"
   - String login
   - String pass
 
-PUT: "/create-user/update-info"
+POST: "/create-user?login=:login&pass=:pass"
+  - String login
+  - String pass
+
+PUT: "/create-user/update-info?email=:email&firstName=:firstName&secondName=:secondName"
   - String email
   - String firstName
   - String secondName
