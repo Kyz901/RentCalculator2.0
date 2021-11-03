@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        return userRepository.findAllUsers();
+        return userRepository.fetchAllUsers();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean checkValidation(String login, String pass) {
-        List<User> users = userRepository.findAllUsers().stream()
+        List<User> users = userRepository.fetchAllUsers().stream()
                 .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase())
                         && u.getPassword().equals(pass))
                 .collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean isUserExist(String login) {
-        List<User> users = userRepository.findAllUsers().stream()
+        List<User> users = userRepository.fetchAllUsers().stream()
                 .filter(u -> u.getLogin().toUpperCase().equals(login.toUpperCase()))
                 .collect(Collectors.toList());
         return users.size() > 0;

@@ -4,7 +4,6 @@ import RentCalculator.dto.PaymentPriceDTO;
 
 import RentCalculator.model.PaymentMaster;
 import RentCalculator.model.PaymentPrice;
-import RentCalculator.model.Product;
 
 import RentCalculator.service.PricingService;
 
@@ -26,20 +25,6 @@ public class PricingController {
         this.pricingService = pricingService;
     }
 
-    @GetMapping("/product")
-    public ResponseEntity<?> getAllProducts() {
-        List<Product> productList = pricingService.getAllProducts();
-
-        return new ResponseEntity<List<Product>>(productList, HttpStatus.OK);
-    }
-
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<?> getProductById(@PathVariable Integer productId) {
-        Product product = pricingService.getProductById(productId);
-
-        return new ResponseEntity<Product>(product, HttpStatus.OK);
-    }
-
     @GetMapping("/payment-master/{paymentMasterId}")
     public ResponseEntity<?> getPaymentMasterById(@PathVariable Integer paymentMasterId) {
         PaymentMaster paymentMaster = pricingService.getPaymentMasterById(paymentMasterId);
@@ -58,6 +43,7 @@ public class PricingController {
         List<PaymentPrice> paymentPriceList = pricingService.getPaymentPrices(paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>(paymentPriceList, HttpStatus.OK);
     }
+
     @PostMapping("/payment-master")
     public ResponseEntity<?> createPaymentMaster(@RequestParam String paymentName) {
         PaymentMaster paymentMaster = pricingService.createPaymentMaster(paymentName);
@@ -65,8 +51,8 @@ public class PricingController {
     }
 
     @PostMapping("/payment-master/{paymentMasterId}/pricing")
-    public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPriceDTO> paymentPrice, @PathVariable Integer paymentMasterId){
-        List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrice, paymentMasterId);
+    public ResponseEntity<?> priceProduct(@RequestBody List<PaymentPriceDTO> paymentPrices, @PathVariable Integer paymentMasterId){
+        List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrices, paymentMasterId);
         pricingService.updateTotalPriceInPaymentMaster(paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>( paymentPriceList, HttpStatus.OK);
     }

@@ -32,29 +32,19 @@ public class PricingServiceImpl implements PricingService {
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAllProducts();
-    }
-
-    @Override
-    public Product getProductById(Integer productId) {
-        return productRepository.findProductById(productId);
-    }
-
-    @Override
     public PaymentMaster getPaymentMasterById(Integer paymentMasterId) {
-       return paymentMasterRepository.findPaymentMasterById(paymentMasterId);
+       return paymentMasterRepository.fetchPaymentMasterById(paymentMasterId);
     }
 
     @Override
     public List<PaymentMaster> getAllPaymentMasterForCurrentUser() {
-        return paymentMasterRepository.findPaymentMasterForCurrentUser(CurrentUser.get().getId());
+        return paymentMasterRepository.fetchPaymentMasterForCurrentUser(CurrentUser.get().getId());
     }
 
     @Override
     public PaymentMaster createPaymentMaster(String paymentName) {
         paymentMasterRepository.createPaymentMaster(CurrentUser.get().getId(), paymentName);
-        return paymentMasterRepository.findPaymentMasterByName(paymentName);
+        return paymentMasterRepository.fetchPaymentMasterByName(paymentName);
     }
 
     /** Pricing by formula -> price = (newMeterReadings - oldMeterReadings) * product.singlePrice(m^3)
@@ -66,7 +56,7 @@ public class PricingServiceImpl implements PricingService {
     @Override
     public List<PaymentPrice> priceProduct(List<PaymentPriceDTO> paymentPriceList, Integer paymentMasterId) {
         for (PaymentPriceDTO paymentPrice : paymentPriceList) {
-            Product product = productRepository.findProductById(paymentPrice.getProductId());
+            Product product = productRepository.fetchProductById(paymentPrice.getProductId());
             Integer newMeterReadings = paymentPrice.getNewMeterReadings();
             Integer oldMeterReadings = paymentPrice.getOldMeterReadings();
             double price = (newMeterReadings - oldMeterReadings) * product.getSinglePrice();
@@ -78,13 +68,13 @@ public class PricingServiceImpl implements PricingService {
                     price
             );
         }
-        return paymentPriceRepository.findAllPricesByPaymentMasterId(paymentMasterId);
+        return paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
     }
 
     @Override
     public void updateTotalPriceInPaymentMaster(Integer paymentMasterId) {
         Double totalPrice = 0.00;
-        List<PaymentPrice> paymentPriceList = paymentPriceRepository.findAllPricesByPaymentMasterId(paymentMasterId);
+        List<PaymentPrice> paymentPriceList = paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
         for (PaymentPrice paymentPrice : paymentPriceList) {
             totalPrice += paymentPrice.getPrice();
         }

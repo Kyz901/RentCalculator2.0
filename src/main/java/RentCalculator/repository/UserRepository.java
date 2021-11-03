@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
                    "FROM rentcalculator.users u " +
                    "WHERE u.is_deleted = FALSE",
                     nativeQuery = true)
-    List<User> findAllUsers();
+    List<User> fetchAllUsers();
 
     @Query(value = "SELECT u.id, u.first_name, u.second_name, u.email, u.login, u.password, u.is_deleted " +
                    "FROM rentcalculator.users u " +

@@ -17,7 +17,7 @@ public interface PaymentPriceRepository extends JpaRepository<PaymentPrice,Integ
                    "WHERE pp.is_deleted = FALSE " +
                    "AND pp.payment_master_id = :paymentMasterId ",
                    nativeQuery = true)
-    List<PaymentPrice> findAllPricesByPaymentMasterId(@Param("paymentMasterId") Integer paymentMasterId);
+    List<PaymentPrice> fetchAllPricesByPaymentMasterId(@Param("paymentMasterId") Integer paymentMasterId);
 
     @Transactional
     @Modifying

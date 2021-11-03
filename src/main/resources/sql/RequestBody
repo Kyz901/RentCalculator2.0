@@ -1,10 +1,6 @@
     --  PRICING CONTROLLER  --
 
-GET: "/product"
---||--
-
-GET: "/product/{productId}"
- - Integer productId
+GET: "/payment-master" //for current user
 
 GET: "/payment-master/{paymentMasterId}"
  - Integer paymentMasterId
@@ -29,6 +25,25 @@ POST: "/payment-master/{paymentMasterId}/pricing"
 
 POST: "/payment-master?paymentName=:paymentName"
  - String paymentName
+
+    --  PRODUCT CONTROLLER --
+
+GET: "/product/all"
+
+GET: "/{productId}"
+ - Integer productId
+
+PUT: "/product/update-price"
+{
+  "productName": "Water",
+  "singlePrice": 16.32
+}
+
+POST: "/product/create"
+{
+  "productName": "Gas",
+  "singlePrice": 7.23
+}
 
     --  USER CONTROLLER --
 
