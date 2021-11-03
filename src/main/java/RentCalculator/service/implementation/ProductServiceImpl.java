@@ -29,8 +29,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductDTO productDTO) {
-        return productRepository.createProduct(
+    public void createProduct(ProductDTO productDTO) {
+        productRepository.createProduct(
             productDTO.getProductName(),
             productDTO.getSinglePrice()
         );

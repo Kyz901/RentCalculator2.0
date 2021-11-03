@@ -10,7 +10,7 @@ public interface ProductService {
 
     List<Product> getAllProducts();
     Product getProductById(Integer productId);
-    Product createProduct(ProductDTO productDTO);
+    void createProduct(ProductDTO productDTO);
     Product updateProductSinglePrice(UpdateProductDTO updateProductDTO);
     void deleteProduct(Integer productId);
 }

@@ -37,9 +37,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     @Transactional
     @Modifying
     @Query(value = "INSERT INTO rentcalculator.product_service(id, product_name, single_price, is_deleted) " +
-        "VALUES ( NULL, 0.0, :productName, :singlePrice, 0)",
+        "VALUES ( NULL, :productName, :singlePrice, 0)",
         nativeQuery = true)
-    Product createProduct(@Param("productName") String productName,
+    void createProduct(@Param("productName") String productName,
                           @Param("singlePrice") Double singlePrice);
 
     @Transactional

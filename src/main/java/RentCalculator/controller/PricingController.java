@@ -43,6 +43,7 @@ public class PricingController {
         List<PaymentPrice> paymentPriceList = pricingService.getPaymentPrices(paymentMasterId);
         return new ResponseEntity<List<PaymentPrice>>(paymentPriceList, HttpStatus.OK);
     }
+
     @PostMapping("/payment-master")
     public ResponseEntity<?> createPaymentMaster(@RequestParam String paymentName) {
         PaymentMaster paymentMaster = pricingService.createPaymentMaster(paymentName);
