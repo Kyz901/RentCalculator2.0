@@ -45,15 +45,15 @@ public class PricingService {
     /**
      * Pricing by formula -> Price = (NewMeterReadings - OldMeterReadings) * ProductSinglePrice(m^3)
      *
-     * @param paymentPriceList
+     * @param paymentPrices
      * @param paymentMasterId
      * @return List of PaymentPrices
      */
-    public List<PaymentPrice> priceProduct(final List<PaymentPrice> paymentPriceList, Integer paymentMasterId) {
-        for (PaymentPrice paymentPrice : paymentPriceList) {
+    public List<PaymentPrice> priceProduct(final List<PaymentPrice> paymentPrices, Integer paymentMasterId) {
+        for (PaymentPrice paymentPrice : paymentPrices) {
             Integer productId = paymentPrice.getProductId();
             Product product = productService.getProductById(productId);
-            Double price = calculatePrice(paymentPrice, product);
+            Double price = paymentPrice.calculatePrice(product);
             paymentPriceRepository.insertPriceIntoPaymentPrice(
                 paymentMasterId,
                 paymentPrice,
@@ -64,14 +64,10 @@ public class PricingService {
         return paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
     }
 
-    private Double calculatePrice(final PaymentPrice paymentPrice, final Product product) {
-        return (paymentPrice.getNewMeterReadings() - paymentPrice.getOldMeterReadings()) * product.getSinglePrice();
-    }
-
     public void updateTotalPriceInPaymentMaster(final Integer paymentMasterId) {
 
-        List<PaymentPrice> paymentPriceList = paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
-        Double totalPrice = calculateTotalPrice(paymentPriceList);
+        List<PaymentPrice> paymentPrices = paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
+        Double totalPrice = calculateTotalPrice(paymentPrices);
         paymentMasterRepository.updateTotalPrice(paymentMasterId, totalPrice);
     }
 
