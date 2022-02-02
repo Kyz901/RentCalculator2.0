@@ -1,4 +1,4 @@
-package RentCalculator.model;
+package RentCalculator.authorization.model;
 
 public final class CurrentUser {
 
