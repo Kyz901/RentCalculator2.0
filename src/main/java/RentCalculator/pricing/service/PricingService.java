@@ -1,18 +1,19 @@
 package RentCalculator.pricing.service;
 
-import RentCalculator.authorization.model.CurrentUser;
-
 import RentCalculator.pricing.model.PaymentMaster;
 import RentCalculator.pricing.model.PaymentPrice;
 import RentCalculator.pricing.model.Product;
 import RentCalculator.pricing.repository.PaymentMasterRepository;
 import RentCalculator.pricing.repository.PaymentPriceRepository;
 
+import RentCalculator.security.model.AuthenticatedAccount;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@Slf4j
 public class PricingService {
 
     private final ProductService productService;
@@ -29,17 +30,30 @@ public class PricingService {
         this.paymentPriceRepository = paymentPriceRepository;
     }
 
-    public PaymentMaster getPaymentMasterById(final Integer paymentMasterId) {
+    public PaymentMaster getPaymentMasterById(final Long paymentMasterId) {
         return paymentMasterRepository.fetchPaymentMasterById(paymentMasterId);
     }
 
-    public List<PaymentMaster> getAllPaymentMasterForCurrentUser() {
-        return paymentMasterRepository.fetchPaymentMasterForCurrentUser(CurrentUser.get().getId());
+    public List<PaymentPrice> getPaymentPrices(final Long paymentMasterId) {
+        return paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
     }
 
-    public PaymentMaster createPaymentMaster(final String paymentName) {
-        paymentMasterRepository.createPaymentMaster(CurrentUser.get().getId(), paymentName);
-        return paymentMasterRepository.fetchPaymentMasterByName(paymentName);
+    public List<PaymentMaster> getAllPaymentMasterForUser(final AuthenticatedAccount principal) {
+        return paymentMasterRepository.fetchPaymentMasterForCurrentUser(principal.getUserId());
+    }
+
+    public PaymentMaster createPaymentMaster(
+        final String paymentName,
+        final AuthenticatedAccount principal
+    ) {
+        final long paymentMasterId = paymentMasterRepository.createPaymentMaster(principal.getUserId(), paymentName);
+
+        log.info("IN [POST createPaymentMaster]: successfully created payment: {} - initiated user: {}",
+            paymentMasterId,
+            principal.getUsername()
+        );
+
+        return paymentMasterRepository.fetchPaymentMasterById(paymentMasterId);
     }
 
     /**
@@ -49,25 +63,30 @@ public class PricingService {
      * @param paymentMasterId
      * @return List of PaymentPrices
      */
-    public List<PaymentPrice> priceProduct(final List<PaymentPrice> paymentPrices, Integer paymentMasterId) {
-        for (PaymentPrice paymentPrice : paymentPrices) {
-            Integer productId = paymentPrice.getProductId();
-            Product product = productService.getProductById(productId);
-            Double price = paymentPrice.calculatePrice(product);
+    public List<PaymentPrice> priceProduct(final List<PaymentPrice> paymentPrices, final Long paymentMasterId) {
+        paymentPrices.forEach(paymentPrice -> {
+            final Product product = productService.getProductById(paymentPrice.getProductId());
+            final Double price = paymentPrice.calculatePrice(product);
             paymentPriceRepository.insertPriceIntoPaymentPrice(
                 paymentMasterId,
                 paymentPrice,
                 price
             );
-        }
+        });
 
         return paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
     }
 
-    public void updateTotalPriceInPaymentMaster(final Integer paymentMasterId) {
+    public void updateTotalPriceInPaymentMaster(final Long paymentMasterId) {
+        final List<PaymentPrice> paymentPrices = paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
+        final Double totalPrice = calculateTotalPrice(paymentPrices);
 
-        List<PaymentPrice> paymentPrices = paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
-        Double totalPrice = calculateTotalPrice(paymentPrices);
+        log.info(
+            "IN [POST priceProduct]: payment id: {} - total payment cost: {}",
+            paymentMasterId,
+            totalPrice
+        );
+
         paymentMasterRepository.updateTotalPrice(paymentMasterId, totalPrice);
     }
 
@@ -77,9 +96,5 @@ public class PricingService {
             .map(PaymentPrice::getPrice)
             .mapToDouble(Double::doubleValue)
             .sum();
-    }
-
-    public List<PaymentPrice> getPaymentPrices(final Integer paymentMasterId) {
-        return paymentPriceRepository.fetchAllPricesByPaymentMasterId(paymentMasterId);
     }
 }

@@ -3,6 +3,7 @@ package RentCalculator.pricing.repository;
 import RentCalculator.pricing.model.PaymentMaster;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public class PaymentMasterRepository {
         this.operations = operations;
     }
 
-    public List<PaymentMaster> fetchPaymentMasterForCurrentUser(final Integer userId) {
-        String sql = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted"
+    public List<PaymentMaster> fetchPaymentMasterForCurrentUser(final Long userId) {
+        final String sql = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted"
             + " FROM rentcalculator.payment_master pm"
             + " WHERE pm.is_deleted = FALSE"
             + " AND pm.user_id = :userId";
@@ -27,7 +28,7 @@ public class PaymentMasterRepository {
             .addValue("userId", userId);
 
         return operations.query(sql, parameters, (rs, rowNum) -> new PaymentMaster()
-            .setId(rs.getInt("id"))
+            .setId(rs.getLong("id"))
             .setTotalPrice(rs.getDouble("total_price"))
             .setUserId(rs.getInt("user_id"))
             .setPaymentName(rs.getString("payment_name"))
@@ -35,34 +36,16 @@ public class PaymentMasterRepository {
         );
     }
 
-    public PaymentMaster fetchPaymentMasterByName(final String paymentName) {
-        String sql = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted"
+    public PaymentMaster fetchPaymentMasterById(final Long paymentMasterId) {
+        final String sql = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted"
             + " FROM rentcalculator.payment_master pm"
             + " WHERE pm.is_deleted = FALSE"
-            + " AND pm.payment_name = :paymentName";
-        final MapSqlParameterSource parameters = new MapSqlParameterSource()
-            .addValue("paymentName", paymentName);
-
-        return operations.queryForObject(sql, parameters, (rs, rowNum) -> new PaymentMaster()
-            .setId(rs.getInt("id"))
-            .setTotalPrice(rs.getDouble("total_price"))
-            .setUserId(rs.getInt("user_id"))
-            .setPaymentName(rs.getString("payment_name"))
-            .setDeleted(rs.getBoolean("is_deleted"))
-        );
-    }
-
-    public PaymentMaster fetchPaymentMasterById(final Integer paymentMasterId) {
-        String sql = "SELECT pm.id, pm.total_price, pm.user_id, pm.payment_name, pm.is_deleted"
-            + " FROM rentcalculator.payment_master pm"
-            + " WHERE pm.is_deleted = FALSE"
-            + " AND pm.id = :paymentMasterId"
-            + " LIMIT 1";
+            + " AND pm.id = :paymentMasterId";
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
             .addValue("paymentMasterId", paymentMasterId);
 
         return operations.queryForObject(sql, parameters, (rs, rowNum) -> new PaymentMaster()
-            .setId(rs.getInt("id"))
+            .setId(rs.getLong("id"))
             .setTotalPrice(rs.getDouble("total_price"))
             .setUserId(rs.getInt("user_id"))
             .setPaymentName(rs.getString("payment_name"))
@@ -70,8 +53,8 @@ public class PaymentMasterRepository {
         );
     }
 
-    public boolean createPaymentMaster(
-        final Integer userId,
+    public Long createPaymentMaster(
+        final Long userId,
         final String paymentName
     ) {
         String sql = "INSERT INTO rentcalculator.payment_master(id, total_price, user_id, payment_name, is_deleted)"
@@ -80,12 +63,14 @@ public class PaymentMasterRepository {
             .addValue("userId", userId)
             .addValue("paymentName", paymentName);
 
-        operations.update(sql, parameters);
-        return true;
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        operations.update(sql, parameters, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
     public void updateTotalPrice(
-        final Integer paymentMasterId,
+        final Long paymentMasterId,
         final Double totalPrice
     ) {
         String sql = "UPDATE rentcalculator.payment_master pm"

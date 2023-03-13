@@ -1,8 +1,10 @@
 package RentCalculator.pricing.repository;
 
 import RentCalculator.pricing.model.Product;
+import RentCalculator.pricing.model.UpdateProduct;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,14 +27,14 @@ public class ProductRepository {
         final MapSqlParameterSource parameters = new MapSqlParameterSource();
 
         return operations.query(sql, parameters, (rs, rowNum) -> new Product()
-            .setId(rs.getInt("id"))
+            .setId(rs.getLong("id"))
             .setProductName(rs.getString("product_name"))
             .setSinglePrice(rs.getDouble("single_price"))
             .setDeleted(rs.getBoolean("is_deleted"))
         );
     }
 
-    public Product fetchProductById(final Integer productId) {
+    public Product fetchProductById(final Long productId) {
         final String sql = "SELECT ps.id, ps.product_name, ps.single_price, ps.is_deleted"
             + " FROM rentcalculator.product_service ps"
             + " WHERE ps.is_deleted = FALSE"
@@ -41,7 +43,7 @@ public class ProductRepository {
             .addValue("productId", productId);
 
         return operations.queryForObject(sql, parameters, (rs, rowNum) -> new Product()
-            .setId(rs.getInt("id"))
+            .setId(rs.getLong("id"))
             .setProductName(rs.getString("product_name"))
             .setSinglePrice(rs.getDouble("single_price"))
             .setDeleted(rs.getBoolean("is_deleted"))
@@ -57,39 +59,58 @@ public class ProductRepository {
             .addValue("productName", productName);
 
         return operations.queryForObject(sql, parameters, (rs, rowNum) -> new Product()
-            .setId(rs.getInt("id"))
+            .setId(rs.getLong("id"))
             .setProductName(rs.getString("product_name"))
             .setSinglePrice(rs.getDouble("single_price"))
             .setDeleted(rs.getBoolean("is_deleted"))
         );
     }
 
-    public boolean createProduct(
+    public List<Product> fetchProductByNames(final List<String> productNames) {
+        final String sql = "SELECT ps.id, ps.product_name, ps.single_price, ps.is_deleted"
+            + " FROM rentcalculator.product_service ps"
+            + " WHERE ps.is_deleted = FALSE"
+            + " AND ps.product_name IN (:productNames)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource()
+            .addValue("productNames", productNames);
+
+        return operations.query(sql, parameters, (rs, rowNum) -> new Product()
+            .setId(rs.getLong("id"))
+            .setProductName(rs.getString("product_name"))
+            .setSinglePrice(rs.getDouble("single_price"))
+            .setDeleted(rs.getBoolean("is_deleted"))
+        );
+    }
+
+    public long createProduct(
         final String productName,
         final Double singlePrice
     ) {
-        final String sql = "INSERT INTO rentcalculator.product_service(id, product_name, single_price, is_deleted)"
+        final String sql = "INSERT INTO rentcalculator.product_service("
+            + " id, product_name, single_price, is_deleted)"
             + " VALUES (NULL, :productName, :singlePrice, 0)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
             .addValue("productName", productName)
             .addValue("singlePrice", singlePrice);
 
-        operations.update(sql, parameters);
-        return true;
+        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+        operations.update(sql, parameters, keyHolder);
+
+        return keyHolder.getKey().longValue();
     }
 
-    public void updateProductSinglePrice(
-        final String productName,
-        final Double newSinglePrice
+    public String updateProductSinglePrice(
+        final UpdateProduct updateProduct
     ) {
         final String sql = "UPDATE rentcalculator.product_service ps"
             + " SET ps.single_price = :newSinglePrice"
             + " WHERE ps.product_name = :productName";
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
-            .addValue("productName", productName)
-            .addValue("newSinglePrice", newSinglePrice);
+            .addValue("productName", updateProduct.getProductName())
+            .addValue("newSinglePrice", updateProduct.getSinglePrice());
 
         operations.update(sql, parameters);
+        return updateProduct.getProductName();
     }
 
     public void deleteProduct(final Integer productId) {

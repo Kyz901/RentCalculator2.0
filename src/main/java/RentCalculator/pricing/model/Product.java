@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Product {
 
-    private Integer id;
+    private Long id;
     private String productName;
     private Double singlePrice;
     private boolean isDeleted;
