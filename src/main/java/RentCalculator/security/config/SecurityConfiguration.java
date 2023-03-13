@@ -35,6 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .sessionManagement().sessionCreationPolicy(STATELESS)
             .and()
+            .formLogin().disable()
             .authorizeRequests()
                 .antMatchers(POST, "/api/v1/auth/*").permitAll()
                 .antMatchers(DELETE, "/api/v1/user/delete-user/{userId}").hasRole("ADMIN")
