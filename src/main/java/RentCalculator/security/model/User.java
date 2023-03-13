@@ -1,4 +1,4 @@
-package RentCalculator.authorization.model;
+package RentCalculator.security.model;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -7,12 +7,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class User {
 
-    private Integer id;
+    private Long id;
     private String firstName;
     private String secondName;
     private String email;
     private String login;
     private String password;
+    private UserRole role;
+    private boolean isActive;
     private boolean isDeleted;
 
 }

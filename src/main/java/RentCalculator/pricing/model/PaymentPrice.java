@@ -7,11 +7,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PaymentPrice {
 
-    private Integer id;
-    private Integer paymentMasterId;
+    private Long id;
+    private Long paymentMasterId;
     private Integer oldMeterReadings;
     private Integer newMeterReadings;
-    private Integer productId;
+    private Long productId;
     private Double price;
     private boolean isDeleted;
 

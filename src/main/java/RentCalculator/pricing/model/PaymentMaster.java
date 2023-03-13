@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class PaymentMaster {
 
-    private Integer id;
+    private Long id;
     private Double totalPrice;
     private Integer userId;
     private String paymentName;
