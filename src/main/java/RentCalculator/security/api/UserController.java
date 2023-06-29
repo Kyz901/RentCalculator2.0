@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,7 +31,12 @@ public class UserController {
 
     @GetMapping("/all-users")
     public List<User> getAllUsers(
+        @AuthenticationPrincipal final AuthenticatedAccount principal
     ) {
+        log.info("IN [GET getAllUsers]: - initiated user: {}",
+            principal.getUsername()
+        );
+
         return userService.getAllUsers();
     }
 
@@ -49,6 +55,20 @@ public class UserController {
             user.getEmail(),
             principal
         );
+    }
+
+    @PutMapping("/update-privileges")
+    public User updateUserPrivileges(
+        @RequestParam final boolean hasPrivileges,
+        @RequestParam final Long userId,
+        @AuthenticationPrincipal final AuthenticatedAccount principal
+    ) {
+        log.info("IN [PUT updateUserPrivileges]: user id to change privileges: {} - initiated user: {}",
+            userId,
+            principal.getUsername()
+        );
+
+        return userService.updateUserPrivileges(userId, hasPrivileges);
     }
 
     @DeleteMapping("/delete-user/{userId}")

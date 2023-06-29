@@ -18,6 +18,7 @@ public class AuthenticatedAccount implements UserDetails, Cloneable {
     private final String firstName;
     private final String lastName;
     private final String email;
+    private final boolean hasPrivileges;
 
     private final String token;
     private final Collection<GrantedAuthority> authorities;

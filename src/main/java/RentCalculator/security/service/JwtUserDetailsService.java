@@ -30,6 +30,7 @@ public class JwtUserDetailsService implements UserDetailsService {
             .email(user.getEmail())
             .firstName(user.getFirstName())
             .lastName(user.getSecondName())
+            .hasPrivileges(user.isHasPrivileges())
             .accountNonLocked(user.isActive())
             .credentialsNonExpired(true)
             .authorities(AuthorityUtils.createAuthorityList(user.getRole().getName()))

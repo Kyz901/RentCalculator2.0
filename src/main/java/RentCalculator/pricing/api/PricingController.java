@@ -69,7 +69,7 @@ public class PricingController {
             principal.getUsername()
         );
 
-        final List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrices, paymentMasterId);
+        final List<PaymentPrice> paymentPriceList = pricingService.priceProduct(paymentPrices, paymentMasterId, principal);
         pricingService.updateTotalPriceInPaymentMaster(paymentMasterId);
 
         log.info(

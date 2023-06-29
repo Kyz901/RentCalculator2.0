@@ -14,6 +14,7 @@ public class User {
     private String login;
     private String password;
     private UserRole role;
+    private boolean hasPrivileges;
     private boolean isActive;
     private boolean isDeleted;
 

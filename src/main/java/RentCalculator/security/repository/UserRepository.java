@@ -22,7 +22,7 @@ public class UserRepository {
 
     public List<User> fetchAllUsers() {
         final String sql = "SELECT u.id, u.first_name, u.second_name, u.email, u.login,"
-            + " u.role_id, ur.name as role_name, u.is_deleted, u.is_active"
+            + " u.role_id, ur.name as role_name, u.is_deleted, u.is_active, u.has_privileges"
             + " FROM rentcalculator.users u"
             + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
             + " WHERE u.is_deleted = FALSE";
@@ -34,6 +34,7 @@ public class UserRepository {
             .setSecondName(rs.getString("second_name"))
             .setEmail(rs.getString("email"))
             .setLogin(rs.getString("login"))
+            .setHasPrivileges(rs.getBoolean("has_privileges"))
             .setRole(new UserRole()
                 .setId(rs.getInt("role_id"))
                 .setName(rs.getString("role_name")))
@@ -43,7 +44,7 @@ public class UserRepository {
     }
 
     public User fetchUserByLogin(final String login) {
-        final String sql = "SELECT u.id, u.first_name, u.second_name, u.email,"
+        final String sql = "SELECT u.id, u.first_name, u.second_name, u.email, u.has_privileges,"
                 + " u.login, u.role_id, ur.name as role_name, u.password, u.is_deleted, u.is_active"
                 + " FROM rentcalculator.users u"
                 + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
@@ -59,6 +60,7 @@ public class UserRepository {
             .setSecondName(rs.getString("second_name"))
             .setEmail(rs.getString("email"))
             .setLogin(rs.getString("login"))
+            .setHasPrivileges(rs.getBoolean("has_privileges"))
             .setRole(new UserRole()
                     .setId(rs.getInt("role_id"))
                     .setName(rs.getString("role_name")))
@@ -70,7 +72,7 @@ public class UserRepository {
 
     public User fetchUserById(final Long userId) {
         final String sql = "SELECT u.id, u.first_name, u.second_name, u.email,"
-                + " u.login, u.role_id, ur.name AS role_name, u.is_deleted, u.is_active"
+                + " u.login, u.role_id, ur.name AS role_name, u.is_deleted, u.is_active, u.has_privileges"
                 + " FROM rentcalculator.users u"
                 + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
                 + " WHERE u.is_deleted = FALSE"
@@ -85,6 +87,7 @@ public class UserRepository {
             .setSecondName(rs.getString("second_name"))
             .setEmail(rs.getString("email"))
             .setLogin(rs.getString("login"))
+            .setHasPrivileges(rs.getBoolean("has_privileges"))
             .setRole(new UserRole()
                     .setId(rs.getInt("role_id"))
                     .setName(rs.getString("role_name")))
@@ -112,7 +115,7 @@ public class UserRepository {
         final String firstName, final String secondName,
         final String email, final Long userId
     ) {
-        String sql = "UPDATE rentcalculator.users u"
+        final String sql = "UPDATE rentcalculator.users u"
             + " SET u.first_name = :firstName,"
             + "     u.second_name = :secondName,"
             + "     u.email = :email"
@@ -136,6 +139,18 @@ public class UserRepository {
             .addValue("userId", userId);
 
         operations.update(sql, parameters);
+    }
+
+    public void updateUserPrivileges(final Long userId, final boolean hasPrivileges) {
+        final String sql = "UPDATE rentcalculator.users u"
+            + " SET u.has_privileges = :hasPrivileges"
+            + " WHERE u.id = :userId";
+
+        final MapSqlParameterSource parameterSource = new MapSqlParameterSource()
+            .addValue("userId", userId)
+            .addValue("hasPrivileges", hasPrivileges);
+
+        operations.update(sql, parameterSource);
     }
 
 }

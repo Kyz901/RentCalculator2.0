@@ -15,7 +15,7 @@ public class PaymentPrice {
     private Double price;
     private boolean isDeleted;
 
-    public Double calculatePrice(final Product product) {
-        return (this.newMeterReadings - this.oldMeterReadings) * product.getSinglePrice();
+    public Double calculatePrice(final Product product, final Integer modifier) {
+        return (this.newMeterReadings - this.oldMeterReadings) * product.getSinglePrice() / modifier;
     }
 }
