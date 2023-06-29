@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
@@ -40,6 +41,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(POST, "/api/v1/auth/*").permitAll()
                 .antMatchers(DELETE, "/api/v1/user/delete-user/{userId}").hasRole("ADMIN")
                 .antMatchers(GET, "/api/v1/user/all-users").hasRole("ADMIN")
+                .antMatchers(PUT, "/api/v1/user/update-privileges").hasRole("ADMIN")
                 .antMatchers(GET, "/api/v1/product/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             .and()

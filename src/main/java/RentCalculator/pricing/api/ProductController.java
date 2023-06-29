@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.joining;
 @RequestMapping("/api/v1/product")
 public class ProductController {
 
-    final ProductService productService;
+    private final ProductService productService;
 
     public ProductController(
         final ProductService productService

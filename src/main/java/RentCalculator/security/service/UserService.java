@@ -78,4 +78,10 @@ public class UserService {
         return userRepository.fetchUserById(principal.getUserId());
     }
 
+    public User updateUserPrivileges(final Long userId, final boolean hasPrivileges) {
+        userRepository.updateUserPrivileges(userId, hasPrivileges);
+
+        return userRepository.fetchUserById(userId);
+    }
+
 }

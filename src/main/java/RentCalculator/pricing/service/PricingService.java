@@ -16,6 +16,9 @@ import java.util.List;
 @Slf4j
 public class PricingService {
 
+    public final static Integer DEFAULT_MODIFIER = 1;
+    public final static Integer PRIVILEGES_MODIFIER = 2;
+
     private final ProductService productService;
     private final PaymentMasterRepository paymentMasterRepository;
     private final PaymentPriceRepository paymentPriceRepository;
@@ -63,14 +66,24 @@ public class PricingService {
      * @param paymentMasterId
      * @return List of PaymentPrices
      */
-    public List<PaymentPrice> priceProduct(final List<PaymentPrice> paymentPrices, final Long paymentMasterId) {
+    public List<PaymentPrice> priceProduct(
+        final List<PaymentPrice> paymentPrices, final Long paymentMasterId,
+        final AuthenticatedAccount principal
+    ) {
         paymentPrices.forEach(paymentPrice -> {
             final Product product = productService.getProductById(paymentPrice.getProductId());
-            final Double price = paymentPrice.calculatePrice(product);
+            final boolean hasPrivileges = principal.isHasPrivileges();
+
+            final Double price = paymentPrice.calculatePrice(
+                product,
+                hasPrivileges ? PRIVILEGES_MODIFIER : DEFAULT_MODIFIER
+            );
+
             paymentPriceRepository.insertPriceIntoPaymentPrice(
                 paymentMasterId,
                 paymentPrice,
-                price
+                price,
+                hasPrivileges
             );
         });
 

@@ -40,19 +40,21 @@ public class PaymentPriceRepository {
     public void insertPriceIntoPaymentPrice(
         final Long paymentMasterId,
         final PaymentPrice paymentPrice,
-        final Double price
+        final Double price,
+        final boolean privilegesApplied
     ) {
         final String sql = "INSERT INTO rentcalculator.payment_price"
             + " (id, payment_master_id, old_meter_readings, new_meter_readings,"
-            + " product_id, price, is_deleted)"
+            + " product_id, price, is_privileges_applied, is_deleted)"
             + " VALUES ( NULL, :paymentMasterId, :oldMeterReadings, :newMeterReadings,"
-            + " :productId, :price, 0)";
+            + " :productId, :price, :privilegesApplied, 0)";
 
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
             .addValue("paymentMasterId", paymentMasterId)
             .addValue("oldMeterReadings", paymentPrice.getOldMeterReadings())
             .addValue("newMeterReadings", paymentPrice.getNewMeterReadings())
             .addValue("productId", paymentPrice.getProductId())
+            .addValue("privilegesApplied", privilegesApplied)
             .addValue("price", price);
 
         operations.update(sql, parameters);
