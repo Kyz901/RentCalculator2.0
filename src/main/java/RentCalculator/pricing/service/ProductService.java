@@ -30,6 +30,10 @@ public class ProductService {
         return productRepository.fetchProductById(productId);
     }
 
+    public List<Product> fetchProductsByIds(final List<Long> productIds) {
+        return productRepository.fetchProductsByIds(productIds);
+    }
+
     public Product createProduct(final Product product) {
         final long productId = productRepository.createProduct(
             product.getProductName(),

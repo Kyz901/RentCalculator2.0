@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -70,14 +73,19 @@ public class PricingService {
         final List<PaymentPrice> paymentPrices, final Long paymentMasterId,
         final AuthenticatedAccount principal
     ) {
-        paymentPrices.forEach(paymentPrice -> {
-            final Product product = productService.getProductById(paymentPrice.getProductId());
-            final boolean hasPrivileges = principal.isHasPrivileges();
+        final boolean hasPrivileges = principal.isHasPrivileges();
+        final Integer privilegesModifier = hasPrivileges ? PRIVILEGES_MODIFIER : DEFAULT_MODIFIER;
 
-            final Double price = paymentPrice.calculatePrice(
-                product,
-                hasPrivileges ? PRIVILEGES_MODIFIER : DEFAULT_MODIFIER
-            );
+        final List<Long> productIds = paymentPrices.stream()
+            .map(PaymentPrice::getProductId)
+            .collect(Collectors.toList());
+        final Map<Long, Product> products = productService.fetchProductsByIds(productIds)
+            .stream()
+            .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+        paymentPrices.forEach(paymentPrice -> {
+            final Product product = products.get(paymentPrice.getProductId());
+            final Double price = paymentPrice.calculatePrice(product, privilegesModifier);
 
             paymentPriceRepository.insertPriceIntoPaymentPrice(
                 paymentMasterId,

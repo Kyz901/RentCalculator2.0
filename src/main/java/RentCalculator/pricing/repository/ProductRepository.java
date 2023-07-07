@@ -50,6 +50,22 @@ public class ProductRepository {
         );
     }
 
+    public List<Product> fetchProductsByIds(final List<Long> productIds) {
+        final String sql = "SELECT ps.id, ps.product_name, ps.single_price, ps.is_deleted"
+            + " FROM rentcalculator.product_service ps"
+            + " WHERE ps.is_deleted = FALSE"
+            + " AND ps.id IN (:productIds)";
+        final MapSqlParameterSource parameters = new MapSqlParameterSource()
+            .addValue("productIds", productIds);
+
+        return operations.query(sql, parameters, (rs, rowNum) -> new Product()
+            .setId(rs.getLong("id"))
+            .setProductName(rs.getString("product_name"))
+            .setSinglePrice(rs.getDouble("single_price"))
+            .setDeleted(rs.getBoolean("is_deleted"))
+        );
+    }
+
     public Product fetchProductByName(final String productName) {
         final String sql = "SELECT ps.id, ps.product_name, ps.single_price, ps.is_deleted"
             + " FROM rentcalculator.product_service ps"
