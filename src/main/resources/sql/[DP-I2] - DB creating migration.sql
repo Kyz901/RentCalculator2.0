@@ -9,6 +9,8 @@ create table product_service
   single_price decimal(12,2) default 0.00 null,
   is_deleted tinyint(1) default 0 not null
 );
+create unique index product_name_unique_idx
+    on product_service (product_name);
 
 create table users
 ( id int unsigned auto_increment primary key,
@@ -41,6 +43,8 @@ create table payment_master
 );
 create index fk_pm_users_idx
     on payment_master (user_id);
+create unique index name_user_id_unique_idx
+    on payment_master (user_id, payment_name);
 
 create table payment_price
 (
