@@ -28,12 +28,12 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class JwtTokenProvider {
 
+    private static final int BEARER_WORD_LENGTH = 7;
+
     @Value("${jwt.token.secret}")
     private String jwtSecret;
     @Value("${jwt.token.expired}")
     private Long expirationMs;
-
-    private static final int BEARER_WORD_LENGTH = 7;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -43,11 +43,11 @@ public class JwtTokenProvider {
         jwtSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
     }
 
-    public String createToken(final String login) {
+    public String createToken(final String email) {
         final Date now = new Date();
 
         return Jwts.builder()
-            .setClaims(Jwts.claims().setSubject(login))
+            .setClaims(Jwts.claims().setSubject(email))
             .setIssuedAt(now)
             .setExpiration(new Date(now.getTime() + expirationMs))
             .signWith(SignatureAlgorithm.HS256, jwtSecret)

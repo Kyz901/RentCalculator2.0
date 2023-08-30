@@ -50,7 +50,7 @@ public class UserRepository {
                 + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
                 + " WHERE u.is_deleted = FALSE"
                 + "   AND u.is_active = TRUE"
-                + "   AND u.login = :login";
+                + "   AND (u.login = :login OR u.email = :login)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
                 .addValue("login", login);
 

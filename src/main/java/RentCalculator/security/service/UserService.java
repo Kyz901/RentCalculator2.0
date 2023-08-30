@@ -34,7 +34,7 @@ public class UserService {
         final UserRole userRole = userRoleRepository.fetchRoleByName(USER_ROLE);
 
         final long createdUserId = userRepository.createUser(user
-            .setPassword(user.getPassword())
+            .setPassword(user.getPassword()) //todo: encoder
 //            .setPassword(passwordEncoder.encode(user.getPassword()))
             .setRole(userRole)
         );

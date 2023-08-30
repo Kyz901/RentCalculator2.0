@@ -46,7 +46,7 @@ public class AuthController {
                 throw new UsernameNotFoundException("User with username: " + userLogin + " does not exist");
             }
             final HashMap<String, String> response = new HashMap<>();
-            response.put("token", tokenProvider.createToken(userLogin));
+            response.put("token", tokenProvider.createToken(existedUser.getEmail()));
 
             log.info("IN [POST login]: <end login successfully> - authenticated user id: {} - initiated user: {}",
                 existedUser.getId(),
