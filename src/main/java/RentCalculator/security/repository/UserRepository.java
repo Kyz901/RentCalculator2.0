@@ -4,7 +4,6 @@ import RentCalculator.security.model.User;
 import RentCalculator.security.model.UserRole;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,16 +44,16 @@ public class UserRepository {
 
     public User fetchUserByLogin(final String login) {
         final String sql = "SELECT u.id, u.first_name, u.second_name, u.email, u.has_privileges,"
-                + " u.login, u.role_id, ur.name as role_name, u.password, u.is_deleted, u.is_active"
-                + " FROM rentcalculator.users u"
-                + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
-                + " WHERE u.is_deleted = FALSE"
-                + "   AND u.is_active = TRUE"
-                + "   AND (u.login = :login OR u.email = :login)";
+            + " u.login, u.role_id, ur.name as role_name, u.password, u.is_deleted, u.is_active"
+            + " FROM rentcalculator.users u"
+            + " JOIN rentcalculator.user_roles ur ON u.role_id = ur.id"
+            + " WHERE u.is_deleted = FALSE"
+            + "   AND u.is_active = TRUE"
+            + "   AND (u.login = :login OR u.email = :login)";
         final MapSqlParameterSource parameters = new MapSqlParameterSource()
-                .addValue("login", login);
+            .addValue("login", login);
 
-        return operations.queryForObject(sql, parameters, (rs, rowNum) -> new User()
+        final List<User> users = operations.query(sql, parameters, (rs, rowNum) -> new User()
             .setId(rs.getLong("id"))
             .setFirstName(rs.getString("first_name"))
             .setSecondName(rs.getString("second_name"))
@@ -62,12 +61,22 @@ public class UserRepository {
             .setLogin(rs.getString("login"))
             .setHasPrivileges(rs.getBoolean("has_privileges"))
             .setRole(new UserRole()
-                    .setId(rs.getInt("role_id"))
-                    .setName(rs.getString("role_name")))
+                .setId(rs.getInt("role_id"))
+                .setName(rs.getString("role_name")))
             .setPassword(rs.getString("password"))
             .setDeleted(rs.getBoolean("is_deleted"))
             .setActive(rs.getBoolean("is_active"))
         );
+
+        if (users.isEmpty()) {
+            // Handle the case when no user is found
+            return null;
+        } else if (users.size() > 1) {
+            // Handle the case when multiple users are found
+            throw new IllegalStateException("Multiple users found for login: " + login);
+        }
+
+        return users.get(0);
     }
 
     public User fetchUserById(final Long userId) {
@@ -94,21 +103,6 @@ public class UserRepository {
             .setDeleted(rs.getBoolean("is_deleted"))
             .setActive(rs.getBoolean("is_active"))
         );
-    }
-
-    public long createUser(final User user) {
-        final String sql = "INSERT INTO"
-            + " rentcalculator.users(login, password, role_id)"
-            + " VALUES (:login, :pass, :roleId)";
-        final MapSqlParameterSource parameters = new MapSqlParameterSource()
-            .addValue("login", user.getLogin())
-            .addValue("pass", user.getPassword())
-            .addValue("roleId", user.getRole().getId());
-
-        final GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        operations.update(sql, parameters, keyHolder);
-
-        return keyHolder.getKey().longValue();
     }
 
     public void updateUserInformation(
