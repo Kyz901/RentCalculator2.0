@@ -1,4 +1,4 @@
-package RentCalculator.common.exceptions;
+package rentCalculator.common.exceptions;
 
 import lombok.NoArgsConstructor;
 
